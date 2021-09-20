@@ -1,9 +1,11 @@
 %figures for Araleighs Sea ice paper
 
+%% set paths
 clc;  clear all ; close all; %reset workspace
 addpath('c:\Users\rps207\Documents\Matlab\Functions');
 addpath('c:\Users\rps207\Documents\Matlab\Functions\Add_Axis');
 addpath('c:\Users\rps207\Documents\Matlab\Functions\cbdate');
+addpath('C:\Users\rps207\Documents\MATLAB\Functions\Export_Fig');
 addpath('c:\Users\rps207\Documents\Matlab\Functions\mixing_library');
 addpath('c:\Users\rps207\Documents\Matlab\Functions\despiking_tooblox');
 addpath('c:\Users\rps207\Documents\Matlab\Functions\cm_and_cb_utilities');
@@ -11,6 +13,8 @@ addpath('c:\Users\rps207\Documents\Matlab\Functions\m_map');
 addpath('C:\Users\rps207\Documents\MATLAB\Functions\Colormaps\Colormaps (5)\Colormaps');
 p=genpath('C:\Users\rps207\Documents\MATLAB\Functions\contourfcmap');
 addpath(p)
+
+addpath('C:\Users\rps207\Documents\MATLAB\Functions\xpdf-tools-win-4.03\bin64');
 
 addpath('c:\Users\rps207\Documents\Matlab\Functions\cbrewer');
 addpath('c:\Users\rps207\Documents\Matlab\Functions\mixing_library');
@@ -39,9 +43,7 @@ markersty='p' ;
 [cm_data]=viridis();
 set(groot,'DefaultFigureColormap',cm_data)
 colormap(parula)
-
-%%% Custom RGB colour vectors
-
+%% Custom RGB colour vectors
 colour_teal = [18 150 155] ./ 255;
 colour_lightgreen = [94 250 81] ./ 255;
 colour_green = [12 195 82] ./ 255;
@@ -57,7 +59,6 @@ colour_rose = [253 153 153] ./ 255;
 colour_greyshade= [192 192 192] ./ 255;
 colour_violet = [238,130,238] ./ 255;
 colour_orangelight = [255,178,102] ./ 255;
-
 
 colour_indigo = [75,0,130] ./ 255;
 colour_mustard = [204 204 0] ./ 255;
@@ -90,15 +91,9 @@ colour_khaki = [240,230,140] ./ 255;
 
 colour_offwhite =[242, 243, 244] ./ 255; 
 colour_seaice_blue =[214, 234, 248 ] ./ 255; 
-
+%% load bathymetry data
 load('C:\Users\rps207\Documents\Data\Coastline and bathymetry data/bathymetry_cambay.mat')
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-% load in data
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-% load in snow data
+%% load in snow data
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 [~, ~, raw] = xlsread('C:\Users\rps207\Documents\Data\Field data\2019 - 05 - MAY - Sea ice core data\Snowdepth.xlsx','Sheet','A2:D16');
@@ -113,7 +108,7 @@ Snowdepth_B = data(:,2);
 clearvars data raw cellVectors;
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-% load in high res core profiles
+%% load in high res core profiles
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 % profile data - in 3 sheets so extarct them seperately 
@@ -155,7 +150,7 @@ Sal_B = data(:,4);
 clearvars data raw cellVectors R;
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-% load in snow depth transect
+%% load in snow depth transect
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 [~, ~, raw] = xlsread('C:\Users\rps207\Documents\Data\Field data\2019 - 05 - MAY - Sea ice core data\IceSnowTransect.xlsx','Sheet1','A2:J11');
@@ -180,7 +175,7 @@ snow_trans_IceThkinverted = data(:,6);
 clearvars data raw cellVectors R;
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-% load in temp/sal site A
+%% load in temp/sal site A
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 [~, ~, raw] = xlsread('C:\Users\rps207\Documents\Data\Field data\2019 - 05 - MAY - Sea ice core data\TempSalData.xlsx','ExampleGraph','A3:K23');
@@ -202,7 +197,7 @@ tempsal_siteA_May10_Sal = data(:,9);
 clearvars data raw cellVectors R;
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-% load in temp/sal site B
+%% load in temp/sal site B
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 [~, ~, raw] = xlsread('C:\Users\rps207\Documents\Data\Field data\2019 - 05 - MAY - Sea ice core data\TempSalData.xlsx','ExampleGraph','A30:K48');
@@ -227,7 +222,7 @@ clearvars data raw cellVectors R;
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-% load in temp weather data
+%% load in temp weather data
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 [~, ~, raw, dates] = xlsread('C:\Users\rps207\Documents\Data\Field data\2019 - 05 - MAY - Sea ice core data\Weather.xlsx','en_climate_hourly_NU_2400603_05','A2:AD745','',@convertSpreadsheetExcelDates);
@@ -273,7 +268,7 @@ weather_seaice_Weather = cellVectors(:,15);
 clearvars data raw dates cellVectors R;
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-% load in tidal data
+%% load in tidal data
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 [~, ~, raw, dates] = xlsread('C:\Users\rps207\Documents\Data\Field data\2019 - 05 - MAY - Sea ice core data\Tides.xlsx','Sheet1','A2:F237','',@convertSpreadsheetExcelDates);
@@ -289,7 +284,7 @@ Tidal_height = data(:,4);
 clearvars data raw dates;
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-% load in tilt current meter data
+%% load in tilt current meter data
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 %import data logger A
@@ -350,7 +345,7 @@ max(tcm_b_vel_cms(ind_val_b))
 min(tcm_b_vel_cms(ind_val_b))
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-% load in core data
+%% load in core data
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 %TFYI-top
@@ -410,13 +405,12 @@ POLY_bot_DICumolkg = data(:,2);
 POLY_bot_TAumolkg = data(:,3);
 clearvars data raw;
 
-%%%%%%%%%%%%%%%%%%%%%%%%
-% Make plots here
+
 %%%%%%%%%%%%%%%%%%%%%%%%
 
-%High res core TA/DIC/SAL
-h1=figure(1)
-set(gcf, 'Position', get(0, 'Screensize'));
+%% Figure 4 plot High res core TA/DIC/SAL
+h1=figure(1);
+set(gcf,'Color','w', 'Position', get(0, 'Screensize'));
 set(gcf,'color','w');
 subplot(1,3,1)
 plot(DIC_A,Depth_A,'-o','LineWidth',1.5,'MarkerFaceColor',colour_darkblue,'color',colour_darkblue)
@@ -430,7 +424,6 @@ set(gca,'FontSize',16)
 set(gca,'FontSize',16)
 text(-0.1,1.1,'(a)','color','k','Fontsize',20,'Fontweight','bold','BackgroundColor','none','units','normalized'); 
 Legend=legend('TYFI','POLY','Location','East');set(Legend,'FontSize',12)
-
 
 subplot(1,3,2)
 plot(TA_A,Depth_A,'-o','LineWidth',1.5,'MarkerFaceColor',colour_darkblue,'color',colour_darkblue)
@@ -457,11 +450,9 @@ set(gca,'FontSize',16)
 set(gca,'FontSize',16)
 Legend=legend('TYFI','POLY','Location','East');set(Legend,'FontSize',12)
 text(-0.1,1.1,'(c)','color','k','Fontsize',20,'Fontweight','bold','BackgroundColor','none','units','normalized'); 
-saveas(h1,'C:\Users\rps207\Documents\Research Papers, Books, Thesises, Course and Lecture Notes\My Papers\2020 - Calgary postdoc - Araleigh ice core/Fig4_high_res_cores.jpg'); 
-
-
-
-%High res core SITE A(TA/DIC/SAL) SITE B(TA/DIC/SAL)
+saveas(h1,'C:\Users\rps207\Documents\Research Papers, Books, Thesises, Course and Lecture Notes\My Papers\2020 - Calgary postdoc - Araleigh ice core/Figure4_high_res_cores.jpg'); 
+export_fig('eps','C:\Users\rps207\Documents\Research Papers, Books, Thesises, Course and Lecture Notes\My Papers\2020 - Calgary postdoc - Araleigh ice core/Figure4_high_res_cores.eps'); 
+%% plot High res core SITE A(TA/DIC/SAL) SITE B(TA/DIC/SAL)
 figure(2)
 set(gcf, 'Color','w','Position', get(0,'Screensize'));
 subplot(1,2,1)
@@ -512,8 +503,7 @@ set(c,'Fontsize',24);
 set(gca,'FontSize',16);
 set(hAx(2),'XColor','m')
 set(hAx(2),'YTick',([]));
-
-%High res core SITE A(TA/DIC/SAL) SITE B(TA/DIC/SAL)
+%% plot High res core SITE A(TA/DIC/SAL) SITE B(TA/DIC/SAL)
 figure(3)
 set(gcf, 'Color','w','Position', get(0,'Screensize'));
 subplot(2,1,1)
@@ -562,8 +552,7 @@ set(hAx3,'Fontsize',24)
 set(h3,'FontSize',16);
 set(h3,'YTickLabelRotation',90)
 ylim(h3,[0 10])
-
-%High res core TA vs DIC
+%% plot High res core TA vs DIC
 figure(4)
 scatter(DIC_A,TA_A,50,Depth_A,'*');
 hold on
@@ -576,8 +565,7 @@ h=colorbar;
 ylabel(h,'Ice depth (m)');
 plot(200:800,200:800)
 legend('A','B','Location','SouthEast')
-
-%High res core TA vs salinity
+%% plot High res core TA vs salinity
 figure(5)
 scatter(Sal_A,TA_A,50,Depth_A,'*');
 hold on
@@ -589,12 +577,10 @@ set(gca,'FontSize',16);
 h=colorbar;
 ylabel(h,'Ice depth (m)');
 legend('A','B','Location','SouthEast')
-
 degree_symbol= sprintf('%c', char(176));
-
-%temperature cores
+%% Figure 3 plot temperature cores
 h6=figure(6);
-set(gcf, 'Position', get(0, 'Screensize'));
+set(gcf,'Color','w', 'Position', get(0, 'Screensize'));
 subplot(1,2,1)
 plot(tempsal_siteA_May04_Temp,tempsal_siteA_May04_Depth,'-p','markersize',8,'MarkerFaceColor',colour_darkblue,'color',colour_darkblue);
 hold on
@@ -611,12 +597,11 @@ set(gca,'FontSize',16);
 set(gca,'FontSize',16);
 set(gca, 'YDir','reverse')
 saveas(h6,'C:\Users\rps207\Documents\Research Papers, Books, Thesises, Course and Lecture Notes\My Papers\2020 - Calgary postdoc - Araleigh ice core/Figure3_ice_cores_temps.jpg'); 
-
-
-
-%ice and snow thickness transect
+export_fig('eps','C:\Users\rps207\Documents\Research Papers, Books, Thesises, Course and Lecture Notes\My Papers\2020 - Calgary postdoc - Araleigh ice core/Figure3_ice_cores_temps.eps')
+%% Figure 5 plot ice and snow thickness transect
 interp_icedepths=interp1(snow_trans_DistancefromT1km([ 1 3 5 7 9]),(snow_trans_IceThkcm([ 1 3 5 7 9])),snow_trans_DistancefromT1km);
 h7=figure(7);
+set(gcf,'Color','w', 'Position', get(0, 'Screensize'));
 subtightplot(2,1,1,[0.05 0.03],[0.15 0.15],[0.05 0.05])
 snowarea=area(snow_trans_DistancefromT1km,(snow_trans_SnowDepthcm),'FaceColor',colour_offwhite);
 hold on
@@ -630,6 +615,7 @@ set(gca,'xticklabel',[])
 text(snow_trans_DistancefromT1km(1)-0.13,35+zeros(1,1)', snow_trans_SiteLabel(1),'color','k','Fontsize',12,'Fontweight','bold','BackgroundColor','w'); 
 text(snow_trans_DistancefromT1km(2:end-1),35+zeros(1,8)', snow_trans_SiteLabel(2:end-1),'color','k','Fontsize',12,'Fontweight','bold','BackgroundColor','w'); 
 text(snow_trans_DistancefromT1km(end)+0.05,35+zeros(1,1)', snow_trans_SiteLabel(end),'color','k','Fontsize',12,'Fontweight','bold','BackgroundColor','w'); 
+text(-0.05,1.1,'(a)','color','k','Fontsize',20,'Fontweight','bold','BackgroundColor','none','units','normalized'); 
 
 subtightplot(2,1,2,[0.05 0.03],[0.15 0.15],[0.05 0.05])
 set(gcf, 'Position', get(0, 'Screensize'));
@@ -643,13 +629,13 @@ set(gca,'FontSize',16);
 set(gca,'FontSize',16);
 ylim([150 200])
 set(gca,'YDir','reverse')
-saveas(h7,'C:\Users\rps207\Documents\Research Papers, Books, Thesises, Course and Lecture Notes\My Papers\2020 - Calgary postdoc - Araleigh ice core//Figure5_snow_ice_depths_transect.jpg'); 
-
-%AIR temperature plot
+text(-0.05,1.1,'(b)','color','k','Fontsize',20,'Fontweight','bold','BackgroundColor','none','units','normalized'); 
+export_fig('eps','C:\Users\rps207\Documents\Research Papers, Books, Thesises, Course and Lecture Notes\My Papers\2020 - Calgary postdoc - Araleigh ice core//Figure5_snow_ice_depths_transect.eps'); 
+%% Figure S2 plot AIR temperature 
 weather_dtstr = datetime(weather_seaice_Year, weather_seaice_Month, weather_seaice_Day, 'Format', 'yyyy MM dd');  % First day of the year
 weather_dt=datenum(weather_dtstr)+weather_seaice_TimeLST;
 h8=figure(8);
-set(gcf, 'Position', get(0, 'Screensize'));
+set(gcf,'Color','w', 'Position', get(0, 'Screensize'));
 set(gca, 'XTick', 737546:1:737561,'FontSize',12)%every 2 days
 x=[logger_a_end logger_b_str logger_b_str logger_a_end];
 y= [ -25 -25 0 0];
@@ -663,16 +649,15 @@ xlabel(['Time (mmm-dd)'],'Fontsize',24);
 ylabel(['Air temperature (',num2str(degree_symbol),'C)'],'Fontsize',24);
 set(gca,'FontSize',16);
 set(gca,'FontSize',16);
-saveas(h8,'C:\Users\rps207\Documents\Research Papers, Books, Thesises, Course and Lecture Notes\My Papers\2020 - Calgary postdoc - Araleigh ice core/FigureS2_icecores_air_temp.jpg'); 
-
-%plot tides
+export_fig('eps','C:\Users\rps207\Documents\Research Papers, Books, Thesises, Course and Lecture Notes\My Papers\2020 - Calgary postdoc - Araleigh ice core/FigureS2_icecores_air_temp.eps'); 
+%% Figure S1 plot tides
 tides_dt=datenum(tides_dateste);
 samplingRateIncrease = 10;
 newXSamplePoints = linspace(tides_dt(1), tides_dt(end), length(tides_dt) * samplingRateIncrease);
 smoothedY = spline(tides_dt,Tidal_height, newXSamplePoints);
 
 h9=figure(9);
-set(gcf, 'Position', get(0, 'Screensize'));
+set(gcf,'Color','w', 'Position', get(0, 'Screensize'));
 set(gca, 'XTick', 737536:1:737561,'FontSize',12)%every day
 % plot(tides_dt,Tidal_height,'LineWidth',0.5,'color','k');
 x=[logger_a_end logger_b_str logger_b_str logger_a_end];
@@ -688,10 +673,10 @@ ylabel('Tidal height (m)','Fontsize',24);
 ylim([0 0.8])
 set(gca,'FontSize',16);
 set(gca,'FontSize',16);
-saveas(h9,'C:\Users\rps207\Documents\Research Papers, Books, Thesises, Course and Lecture Notes\My Papers\2020 - Calgary postdoc - Araleigh ice core/FigureS1_icecores_tides.jpg'); 
-
-h10=figure(10)
-set(gcf, 'Position', get(0, 'Screensize'));
+export_fig('eps','C:\Users\rps207\Documents\Research Papers, Books, Thesises, Course and Lecture Notes\My Papers\2020 - Calgary postdoc - Araleigh ice core/FigureS1_icecores_tides.eps'); 
+%% Figure 2 plot tilt current meters
+h10=figure(10);
+set(gcf,'Color','w', 'Position', get(0, 'Screensize'));
 subplot(1,2,1)
 plot(tcm_a_dt,tcm_a_vel_cms,'MarkerFaceColor',colour_darkblue,'color',colour_darkblue)
 set(gca, 'XTick', 737549:1:737555)
@@ -703,6 +688,7 @@ set(gca,'FontSize',16);
 set(gca,'FontSize',16);
 ylim([0 50])
 xlim([logger_b_str logger_a_end])
+text(-0.12,1.05,'(a)','color','k','Fontsize',20,'Fontweight','bold','BackgroundColor','none','units','normalized'); 
 
 
 subplot(1,2,2)
@@ -716,16 +702,16 @@ set(gca,'FontSize',16);
 set(gca,'FontSize',16);
 xlim([logger_b_str logger_a_end])
 ylim([0 50])
-saveas(h10,'C:\Users\rps207\Documents\Research Papers, Books, Thesises, Course and Lecture Notes\My Papers\2020 - Calgary postdoc - Araleigh ice core/Figure2_tilt_current_meters.jpg'); 
-
-
-%this is a map of the sites and the snow depth transect
+text(-0.12,1.05,'(b)','color','k','Fontsize',20,'Fontweight','bold','BackgroundColor','none','units','normalized'); 
+export_fig('eps','C:\Users\rps207\Documents\Research Papers, Books, Thesises, Course and Lecture Notes\My Papers\2020 - Calgary postdoc - Araleigh ice core/Figure2_tilt_current_meters.eps'); 
+%% Figure 1 plot map of the sites and the snow depth transect
 %run this figure twice to get the colormap legend to update!
 h11=figure(11);
-set(gcf, 'Position', get(0, 'Screensize'));
+set(gcf,'Color','none', 'Position', get(0, 'Screensize'));
+set(gcf,'color','none')   % Set background colour before m_image call
 m_proj('Sinusoidal','lon',[-106.2 -104.9],'lat',[68.8 69.14]);  
 clf
-m_grid('linestyle','none','tickdir','out','fontsize',22,'backcolor',[[0.0392200000000000 0 0.474510000000000]])
+m_grid('linestyle','none','tickdir','out','fontsize',22, 'FontName','Helvetica','backcolor',[[0.0392200000000000 0 0.474510000000000]])
 hold on
 [CS,CH]=m_contourf(longcambridge,latcambridge,bathymetrycambridge',[-100 -90 -80 -70 -60 -50 -40 -30 -20 -10 0],'edgecolor','n','ShowText','on');
 m=colormap([ m_colmap('water')]);
@@ -744,31 +730,31 @@ set(gca,'color',[0.737250000000000 0.901960000000000 1]);
 [C,D]=m_ll2xy( -105.059401,69.124070);
 line(C,D,'marker','o','markersize',4,'MarkerFaceColor','k','color','k');
 [CC,D]=m_ll2xy( -105.129401,69.114070);
-text(CC,D,['Cambridge' char(10) '  Bay'],'HorizontalAlignment', 'left','VerticalAlignment', 'bottom','fontsize',14);
+text(CC,D,['Cambridge' char(10) '  Bay'],'HorizontalAlignment', 'left','VerticalAlignment', 'bottom','fontsize',14, 'FontName','Helvetica');
 
 %add Cambridge Bay weather station
 [C,D]=m_ll2xy( -105.140000000000,69.1100000000000);
 line(C,D,'marker','o','markersize',4,'MarkerFaceColor','k','color','k');
 [CC,D]=m_ll2xy( -105.350000000000,69.1100000000000);
-text(CC,D,['Weather station '],'HorizontalAlignment', 'left','VerticalAlignment', 'bottom','fontsize',14);
+text(CC,D,['Weather station '],'HorizontalAlignment', 'left','VerticalAlignment', 'bottom','fontsize',14, 'FontName','Helvetica');
 
 %add Finlayson islands
 [C,D]=m_ll2xy( -106.03,69.07);
 % line(C,D,'marker','o','markersize',4,'MarkerFaceColor','k','color','k');
 [CC,D]=m_ll2xy( -106.03,69.07);
-text(CC,D,['Finlayson Islands'],'HorizontalAlignment', 'left','VerticalAlignment', 'bottom','fontsize',14);
+text(CC,D,['Finlayson Islands'],'HorizontalAlignment', 'left','VerticalAlignment', 'bottom','fontsize',14, 'FontName','Helvetica');
 
 %add POLY
 [C,D]=m_ll2xy(-105.65888,69.00667);
 line(C,D,'marker','o','markersize',4,'MarkerFaceColor','k','color','k');
 [CC,D]=m_ll2xy(-105.65888,69.00667);
-text(CC,D,['TFYI'],'HorizontalAlignment', 'left','VerticalAlignment', 'bottom','fontsize',14);
+text(CC,D,['TFYI'],'HorizontalAlignment', 'left','VerticalAlignment', 'bottom','fontsize',14, 'FontName','Helvetica');
 
 %add TFYI
 [C,D]=m_ll2xy(-105.836944, 68.999444);
 line(C,D,'marker','o','markersize',4,'MarkerFaceColor','k','color','k');
 [CC,D]=m_ll2xy(-105.836944, 68.999444);
-text(CC,D,['POLY'],'HorizontalAlignment', 'left','VerticalAlignment', 'bottom','fontsize',14);
+text(CC,D,['POLY'],'HorizontalAlignment', 'left','VerticalAlignment', 'bottom','fontsize',14, 'FontName','Helvetica');
 
 
 
@@ -780,26 +766,23 @@ line(C,D,'marker','square','markersize',4,'MarkerFaceColor','r','color','r');
 % text(CC,D,snow_trans_SiteLabel(i),'HorizontalAlignment', 'left','VerticalAlignment', 'Bottom', 'Color','r','fontsize',5,'FontWeight','Bold');
 end
 
-set(gca,'fontsize',22)
+set(gca,'fontsize',22, 'FontName','Helvetica')
 y=ylabel(['Latitude (',num2str(degree_symbol),'N)']);
 set(y,'Units','Normalized','Position',[-0.1,0.5,0]);
-set(gca,'fontsize',22)
+set(gca,'fontsize',22, 'FontName','Helvetica')
 x=xlabel(['Longitude (',num2str(degree_symbol),'W)']);
-set(gca,'fontsize',22)
+set(gca,'fontsize',22, 'FontName','Helvetica')
 set(x,'Units','Normalized','Position',[0.5,-0.05,0]);
-saveas(h11,'C:\Users\rps207\Documents\Research Papers, Books, Thesises, Course and Lecture Notes\My Papers\2020 - Calgary postdoc - Araleigh ice core/Figure1_Kitikmeot_map_ice_cores.jpg'); 
-
-
-
-%this is a deffreys rosette diagram of TA and DIC
+export_fig('eps','C:\Users\rps207\Documents\Research Papers, Books, Thesises, Course and Lecture Notes\My Papers\2020 - Calgary postdoc - Araleigh ice core/Figure1_Kitikmeot_map_ice_cores.eps'); 
+%% Figure 7 plot TA and DIC relationship plot
 h12=figure(12);
-set(gcf, 'Position', get(0, 'Screensize'));
+set(gcf,'Color','w', 'Position', get(0, 'Screensize'));
 subtightplot(2,2,1,[0.1 0.06],[0.12 0.05],[0.2 0.2])
 plot(TFYI_top_LabSalinity,TFYI_top_DICumolkg,'s','MarkerFaceColor',colour_darkblue,'color',colour_darkblue)
 hold on
 plot(TFYI_mid_LabSalinity,TFYI_mid_DICumolkg,'d','MarkerFaceColor',colour_darkblue,'color',colour_darkblue)
 plot(TFYI_bot_LabSalinity,TFYI_bot_DICumolkg,'o','MarkerFaceColor',colour_darkblue,'color',colour_darkblue)
-h=plot(([0; 28.7959]),([0; 1970.97]),'k')
+h=plot(([0; 28.7959]),([0; 1970.97]),'k');
 set(h,'linewidth',1);
 xlabel('Salinity (PSU)','Fontsize',24); 
 ylabel(['TIC ' '(',num2str(micro_symbol),'mol kg^{-1})'],'Fontsize',24);
@@ -816,7 +799,7 @@ plot(POLY_top_LabSalinity,POLY_top_DICumolkg,'s','MarkerFaceColor',colour_crimso
 hold on
 plot(POLY_mid_LabSalinity,POLY_mid_DICumolkg,'d','MarkerFaceColor',colour_crimson,'color',colour_crimson)
 plot(POLY_bot_LabSalinity,POLY_bot_DICumolkg,'o','MarkerFaceColor',colour_crimson,'color',colour_crimson)
-h=plot(([0; 28.7959]),([0; 1970.97]),'k')
+h=plot(([0; 28.7959]),([0; 1970.97]),'k');
 set(h,'linewidth',1);
 xlabel('Salinity (PSU)','Fontsize',24); 
 ylabel(['TIC ' '(',num2str(micro_symbol),'mol kg^{-1})'],'Fontsize',24);
@@ -833,7 +816,7 @@ plot(TFYI_top_LabSalinity,TFYI_top_TAumolkg,'s','MarkerFaceColor',colour_darkblu
 hold on
 plot(TFYI_mid_LabSalinity,TFYI_mid_TAumolkg,'d','MarkerFaceColor',colour_darkblue,'color',colour_darkblue)
 plot(TFYI_bot_LabSalinity,TFYI_bot_TAumolkg,'o','MarkerFaceColor',colour_darkblue,'color',colour_darkblue)
-h=plot(([0; 28.7959]),([0; 2058.00]),'k')
+h=plot(([0; 28.7959]),([0; 2058.00]),'k');
 set(h,'linewidth',1);
 xlabel('Salinity (PSU)','Fontsize',24); 
 ylabel(['TA ' '(',num2str(micro_symbol),'mol kg^{-1})'],'Fontsize',24);
@@ -850,7 +833,7 @@ plot(POLY_top_LabSalinity,POLY_top_TAumolkg,'s','MarkerFaceColor',colour_crimson
 hold on
 plot(POLY_mid_LabSalinity,POLY_mid_TAumolkg,'d','MarkerFaceColor',colour_crimson,'color',colour_crimson)
 plot(POLY_bot_LabSalinity,POLY_bot_TAumolkg,'o','MarkerFaceColor',colour_crimson,'color',colour_crimson)
-h=plot(([0; 28.7959]),([0; 2058.00]),'k')
+h=plot(([0; 28.7959]),([0; 2058.00]),'k');
 set(h,'linewidth',1);
 xlabel('Salinity (PSU)','Fontsize',24); 
 ylabel(['TA ' '(',num2str(micro_symbol),'mol kg^{-1})'],'Fontsize',24);
@@ -861,12 +844,10 @@ ylim([200 700])
 xlim([3 9])
 text(-0.15,1.1,'(d)','color','k','Fontsize',20,'Fontweight','bold','BackgroundColor','none','units','normalized'); 
 Legend=legend('POLY - top','POLY - mid','POLY - bot','Location','NorthWest');set(Legend,'FontSize',12)
-saveas(h12,'C:\Users\rps207\Documents\Research Papers, Books, Thesises, Course and Lecture Notes\My Papers\2020 - Calgary postdoc - Araleigh ice core/Figure7_TA_DIC_relationships.jpg'); 
-
-
-%this is a deffreys rosette diagram of TA and DIC
+export_fig('eps','C:\Users\rps207\Documents\Research Papers, Books, Thesises, Course and Lecture Notes\My Papers\2020 - Calgary postdoc - Araleigh ice core/Figure7_TA_DIC_relationships.eps'); 
+%% Figure 8 plot TA and DIC normalised plot
 h13=figure(13);
-set(gcf, 'Position', get(0, 'Screensize'));
+set(gcf,'Color','w', 'Position', get(0, 'Screensize'));
 subplot(1,2,1)
 plot((TFYI_top_DICumolkg./TFYI_top_LabSalinity)*28.7959,(TFYI_top_TAumolkg./TFYI_top_LabSalinity)*28.7959,'s','MarkerFaceColor',colour_darkblue,'color',colour_darkblue)
 hold on
@@ -896,12 +877,10 @@ Legend=legend('POLY - top','POLY - mid','POLY - bot','Location','NorthWest');set
 text(-0.15,1.05,'(b)','color','k','Fontsize',20,'Fontweight','bold','BackgroundColor','none','units','normalized'); 
 ylabel(['nTA ' '(',num2str(micro_symbol),'mol kg^{-1})'],'Fontsize',24);
 xlabel(['nTIC ' '(',num2str(micro_symbol),'mol kg^{-1})'],'Fontsize',24);
-saveas(h13,'C:\Users\rps207\Documents\Research Papers, Books, Thesises, Course and Lecture Notes\My Papers\2020 - Calgary postdoc - Araleigh ice core/Figure8_TA_DIC_normalised.jpg'); 
-
-
-
-%this is a deffreys rosette diagram of TA and DIC
+export_fig('eps','C:\Users\rps207\Documents\Research Papers, Books, Thesises, Course and Lecture Notes\My Papers\2020 - Calgary postdoc - Araleigh ice core/Figure8_TA_DIC_normalised.eps'); 
+%% Figure 9 plot deffreys rosette diagram of TA and DIC
 h14=figure(14);
+set(gcf,'Color','w', 'Position', get(0, 'Screensize'));
 subtightplot(1,1,1,[],[0.12 0.01],[0.25 0.25])
 set(gcf, 'Position', get(0, 'Screensize'));
 plot(TFYI_top_DICumolkg.*28.7959./TFYI_top_LabSalinity,TFYI_top_TAumolkg.*28.7959./TFYI_top_LabSalinity,'s','markersize',8,'MarkerFaceColor',colour_darkblue,'color',colour_darkblue);
@@ -915,8 +894,8 @@ plot(POLY_mid_DICumolkg.*28.7959./POLY_mid_LabSalinity,POLY_mid_TAumolkg.*28.795
 plot(POLY_bot_DICumolkg.*28.7959./POLY_bot_LabSalinity,POLY_bot_TAumolkg.*28.7959./POLY_bot_LabSalinity,'o','markersize',8,'MarkerFaceColor',colour_crimson,'color',colour_crimson);
 Legend=legend('TYFI - top','TYFI - mid','TYFI - bot','POLY - top','POLY - mid','POLY - bot','Location','SouthEast');set(Legend,'FontSize',12)
 
-normal_dic_TFYI=[TFYI_top_DICumolkg.*28.7959./TFYI_top_LabSalinity; TFYI_mid_DICumolkg.*28.7959./TFYI_mid_LabSalinity; TFYI_bot_DICumolkg.*28.7959./TFYI_bot_LabSalinity]
-normal_ta_TFYI=[TFYI_top_TAumolkg.*28.7959./TFYI_top_LabSalinity; TFYI_mid_TAumolkg.*28.7959./TFYI_mid_LabSalinity; TFYI_bot_TAumolkg.*28.7959./TFYI_bot_LabSalinity]
+normal_dic_TFYI=[TFYI_top_DICumolkg.*28.7959./TFYI_top_LabSalinity; TFYI_mid_DICumolkg.*28.7959./TFYI_mid_LabSalinity; TFYI_bot_DICumolkg.*28.7959./TFYI_bot_LabSalinity];
+normal_ta_TFYI=[TFYI_top_TAumolkg.*28.7959./TFYI_top_LabSalinity; TFYI_mid_TAumolkg.*28.7959./TFYI_mid_LabSalinity; TFYI_bot_TAumolkg.*28.7959./TFYI_bot_LabSalinity];
  c = polyfit(normal_dic_TFYI([2:44 46]),normal_ta_TFYI([2:44 46]),1);
 % Display evaluated equation y = m*x + b
 disp(['Equation is y = ' num2str(c(1)) '*x + ' num2str(c(2))]) %
@@ -924,8 +903,8 @@ x=(1000:1:2500);
 y=(x*c(1))+ c(2); %
 plot(x,y,'color',colour_crimson,'markersize',8)
 
-normal_dic_POLY=[POLY_top_DICumolkg.*28.7959./POLY_top_LabSalinity; POLY_mid_DICumolkg.*28.7959./POLY_mid_LabSalinity; POLY_bot_DICumolkg.*28.7959./POLY_bot_LabSalinity]
-normal_ta_POLY=[POLY_top_TAumolkg.*28.7959./POLY_top_LabSalinity; POLY_mid_TAumolkg.*28.7959./POLY_mid_LabSalinity; POLY_bot_TAumolkg.*28.7959./POLY_bot_LabSalinity]
+normal_dic_POLY=[POLY_top_DICumolkg.*28.7959./POLY_top_LabSalinity; POLY_mid_DICumolkg.*28.7959./POLY_mid_LabSalinity; POLY_bot_DICumolkg.*28.7959./POLY_bot_LabSalinity];
+normal_ta_POLY=[POLY_top_TAumolkg.*28.7959./POLY_top_LabSalinity; POLY_mid_TAumolkg.*28.7959./POLY_mid_LabSalinity; POLY_bot_TAumolkg.*28.7959./POLY_bot_LabSalinity];
  c = polyfit(normal_dic_POLY,normal_ta_POLY,1);
 % Display evaluated equation y = m*x + b
 disp(['Equation is y = ' num2str(c(1)) '*x + ' num2str(c(2))]) %
@@ -966,7 +945,7 @@ set(gca,'FontSize',16)
 set(gca,'FontSize',16)
 ylabel(['nTA ' '(',num2str(micro_symbol),'mol kg^{-1})'],'Fontsize',24);
 xlabel(['nTIC ' '(',num2str(micro_symbol),'mol kg^{-1})'],'Fontsize',24);
-saveas(h14,'C:\Users\rps207\Documents\Research Papers, Books, Thesises, Course and Lecture Notes\My Papers\2020 - Calgary postdoc - Araleigh ice core/Figure9_deffreys rosette diagram.jpg'); 
+export_fig('eps','C:\Users\rps207\Documents\Research Papers, Books, Thesises, Course and Lecture Notes\My Papers\2020 - Calgary postdoc - Araleigh ice core/Figure9_deffreys rosette diagram.eps'); 
 
 
 
